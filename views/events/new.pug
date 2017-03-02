@@ -16,7 +16,7 @@ block content
         .form-group
           label.col-sm-3.control-label(for='title') Event title
           .col-sm-7
-            input.form-control(type='textarea', name='title', id='title', required)
+            input.form-control(type='text', name='title', id='title', required)
         .form-group
           label.col-sm-3.control-label(for='location') Location
           .col-sm-7
@@ -26,22 +26,7 @@ block content
           .col-sm-7
             input.form-control(type='text', name='host', id='host', value='')
         .form-group
-          label.col-sm-3.control-label(for='start') Event start:
-          //- .col-sm-1
-            label#datetimepicker1
-              .input-append.date
-          //- .colsm7      
-            input.form-control-label(data-format="dd/MM/yyyy hh:mm:ss" type="text")
-            span.add-on
-              i(data-time-icon="icon-time" data-date-icon="icon-calendar")
-          //- script.
-            -
-              $(function() {
-                $('#datetimepicker1').datetimepicker({
-                  language: 'pt-BR'
-                });
-              });
-
+          label.col-sm-3.control-label(for='start') Event start:  
           .col-sm-1
             label month:
             select.form-control(id="startmonth", name="startmonth")
