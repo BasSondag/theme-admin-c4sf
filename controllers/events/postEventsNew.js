@@ -1,5 +1,6 @@
 var moment = require('moment')
 var uuid = require('node-uuid')
+var slug = require('slug')
 require('moment-timezone')
 
 module.exports = {
@@ -27,8 +28,13 @@ function postEventsNew (req, res) {
       return
     }
     newEvent.save(function (err) {
-      if (err) console.error(err)
+      if (err) {
+        console.error(err)
+        req.flash('errors', {msg: 'An Error occured while creating your event.'})
+        res.redirect('/admin/events/new')
+        return
+      }
+      req.flash('success', {msg: 'Success! You have created an event.'})
+      res.redirect(`/events/${newEvent.id}`)
     })
-    req.flash('success', {msg: 'Success! You have created an event.'})
-    res.redirect('/events/new')
   }
