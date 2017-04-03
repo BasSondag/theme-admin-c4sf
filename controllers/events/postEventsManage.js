@@ -1,5 +1,3 @@
-var moment = require('moment')
-var uuid = require('node-uuid')
 require('moment-timezone')
 
 module.exports = {
@@ -37,5 +35,5 @@ function postEventsManage (req, res) {
     })
   })
   req.flash('success', {msg: 'Success! You updated events.'})
-  return res.redirect('/events/manage/')
+  return res.redirect('/admin/events/manage/')
 }

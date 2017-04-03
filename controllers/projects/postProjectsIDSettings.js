@@ -1,7 +1,5 @@
-var slug = require('slug')
-var markdown = require('markdown-it')
-var mdnh = require('markdown-it-named-headers')
-var md = markdown({ html: true }).use(mdnh)
+const slug = require('slug')
+const _ = require('lodash')
 
 module.exports = {
   method: 'post',
@@ -14,11 +12,14 @@ module.exports = {
 }
 
 function postProjectsIDSettings (req, res) {
-  var Projects = req.models.Projects
-  var Users = req.models.Users
+  const Projects = req.models.Projects
+  if (!req.user.teams.lead.includes(req.params.projectId) && !req.user.roles.superAdmin && !req.user.roles.core) {
+    req.flash('errors', { msg: 'You are not authorized to access this resource.' })
+    return res.redirect('/projects')
+  }
   Projects.find({'id': req.params.projectId}, function (err, foundProject) {
     if (err) console.error(err)
-    var project = foundProject[0]
+    const project = foundProject[0]
     if (project) {
       project.categories = []
       project.needs = []
@@ -33,6 +34,13 @@ function postProjectsIDSettings (req, res) {
       project.geography = req.body.geography || ''
       project.homepage = req.body.homepage || ''
       project.repositories = req.body.repositories || []
+      project.repositories = _.reject(project.repositories, (repo) => {
+        return repo === ''
+      })
+      project.checkFromGithub = req.body.checkFromGithub || false
+      if (project.checkFromGithub && !project.checkFromGithubAs.length) {
+        project.checkFromGithubAs = req.user.username
+      }
       project.description = req.body.description || ''
       project.content = req.body.content || ''
       project.thumbnailUrl = req.body.thumbnailUrl || ''
