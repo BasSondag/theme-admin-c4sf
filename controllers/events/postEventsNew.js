@@ -37,4 +37,4 @@ function postEventsNew (req, res) {
     req.flash('success', {msg: 'Success! You have created an event.'})
     res.redirect(`/events/${newEvent.id}`)
   })
-}
+} 
