@@ -111,33 +111,13 @@ block content
     .form-group.row
       label.col-sm-3.control-label(for='theme-admin') Admin Theme
       .col-sm-7
-        select(name='theme-admin', id='theme-admin' disabled='disabled')
-          option brigadehub-admin-
-            =brigade.theme.admin
-            | &nbsp;(
-            =brigade.theme.adminVersion
-            | ) [current theme]
-          option(value='none') None (revert to API alone)
-          each theme in adminModules
-            option(value=theme.name+'@'+theme.version)=theme.name
-              | &nbsp;(
-              =theme.version
-              | )
+        input.form-control(type='text', name='theme-admin', id='theme-admin', value=brigade.theme.admin)
+        .col-sm-offset-7.col-sm-4
     .form-group.row
       label.col-sm-3.control-label(for='theme-public') Public Theme
       .col-sm-7
-        select(name='theme-public', id='theme-public', disabled='disabled')
-          option brigadehub-public-
-            =brigade.theme.public
-            | &nbsp;(
-            =brigade.theme.publicVersion
-            | ) [current theme]
-          option(value='none') None (revert to API alone)
-          each theme in publicModules
-            option(value=theme.name+'@'+theme.version)=theme.name
-              | &nbsp;(
-              =theme.version
-              | )
+        input.form-control(type='text', name='theme-public', id='theme-public', value=brigade.theme.public)
+        .col-sm-offset-7.col-sm-4        
     .form-group.row
       label.col-sm-3.control-label(for='logo') Logo
       .col-sm-7
@@ -232,6 +212,13 @@ block content
               th Actions
               th Main Sponsor
           tbody
+            tr
+              td
+              td
+              td
+              td No Main Sponsor
+              td
+                input(type="radio", name="mainsponsor", value=null, checked=brigade.ContainsMainSponsor===false)
             each sponsor, index in brigade.sponsors
               tr
                 td
@@ -430,6 +417,26 @@ block content
           | Update Social Media
   .row
     hr
+  .row 
+    form.row.form-horizontal(action='/admin/brigade/css-override', method='POST')
+      input(type='hidden', name='_csrf', value=_csrf)
+      .form-group
+        label.col-sm-3.control-label(for='cssOverride')=brigadeSchema.cssOverride.label
+        .col-sm-7
+          if brigadeSchema.cssOverride.description && brigadeSchema.cssOverride.description.length
+            em=brigadeSchema.cssOverride.description
+            br
+            br
+          textarea.form-control.hidden(name='cssOverride', id='cssOverride')=brigade.cssOverride
+          #cssOverride-ace.code-editor
+      .form-group
+        .col-sm-offset-3.col-sm-4
+          button.btn.btn.btn-primary(type='submit')
+            i.fa.fa-paint-brush
+            | Save CSS
+
+  .row
+    hr
   .row
     .form-group
       .col-sm-3
@@ -441,3 +448,15 @@ block content
         a.btn.btn.btn-primary(type='submit', href='/api/db/csv?token='+user.jwt)
           i.fa.fa-database
           | Download CSV of DB
+block script
+  script(src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js")
+  script(src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.6/ace.js" type="text/javascript")
+  script.
+    var editor = ace.edit("cssOverride-ace");
+    var field = $('#cssOverride');
+    editor.setTheme("ace/theme/chrome");
+    editor.getSession().setMode("ace/mode/css");
+    editor.getSession().setValue(field.val());
+    editor.getSession().on('change', function(){
+      field.val(editor.getSession().getValue());
+    });
