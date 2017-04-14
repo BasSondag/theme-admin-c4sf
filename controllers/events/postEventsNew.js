@@ -1,6 +1,6 @@
 var moment = require('moment')
 var uuid = require('node-uuid')
-var slug = require('slug')
+// var slug = require('slug')
 require('moment-timezone')
 
 module.exports = {
@@ -29,7 +29,6 @@ function postEventsNew (req, res) {
   }
   newEvent.save(function (err) {
     if (err) {
-
       req.flash('errors', { msg: err.message })
       return res.redirect('/admin/events/manage/')
     }
