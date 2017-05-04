@@ -1,6 +1,5 @@
 var moment = require('moment')
 var uuid = require('node-uuid')
-// var slug = require('slug')
 require('moment-timezone')
 
 module.exports = {
